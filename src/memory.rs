@@ -168,7 +168,7 @@ pub async fn post_memory(
         .arg(sessions_key)
         .arg(chrono::Utc::now().timestamp())
         .arg(&*session_id)
-        .query_async(&mut conn)
+        .query_async::<_, ()>(&mut conn)
         .await
         .map_err(error::ErrorInternalServerError)?;
 
@@ -249,12 +249,12 @@ pub async fn delete_memory(
     redis::cmd("ZREM")
         .arg(sessions_key)
         .arg(&*session_id)
-        .query_async(&mut conn)
+        .query_async::<_, ()>(&mut conn)
         .await
         .map_err(error::ErrorInternalServerError)?;
 
     redis::Cmd::del(keys)
-        .query_async(&mut conn)
+        .query_async::<_, ()>(&mut conn)
         .await
         .map_err(error::ErrorInternalServerError)?;
 
